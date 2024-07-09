@@ -25,8 +25,23 @@ keys.forEach(key => {
                 display.value = calculator.displayValue;
                 break;
             case 'divide':
-            case 'ultiply':
-            case 'ubtract':
+                calculator.operator = key.id;
+                calculator.firstOperand = calculator.displayValue;
+                calculator.displayValue = '';
+                display.value = '';
+                break;
+            case 'multiply':
+                calculator.operator = key.id;
+                calculator.firstOperand = calculator.displayValue;
+                calculator.displayValue = '';
+                display.value = '';
+                break;
+            case 'subtract':
+                calculator.operator = key.id;
+                calculator.firstOperand = calculator.displayValue;
+                calculator.displayValue = '';
+                display.value = '';
+                break;
             case 'add':
                 calculator.operator = key.id;
                 calculator.firstOperand = calculator.displayValue;
@@ -55,9 +70,9 @@ function calculate(a, b, operator) {
     switch (operator) {
         case 'divide':
             return a / b;
-        case 'ultiply':
+        case 'multiply':
             return a * b;
-        case 'ubtract':
+        case 'subtract':
             return a - b;
         case 'add':
             return a + b;
