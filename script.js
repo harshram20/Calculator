@@ -1,80 +1,95 @@
 let display = document.getElementById('display');
-let keys = document.querySelectorAll('.keys button');
+let keys = document.querySelectorAll('.keys');
 
 let calculator = {
     displayValue: '',
     firstOperand: '',
-    secondOperand: '',
     operator: '',
-    result: ''
-};
+    secondOperand: '',
+    result: '',
 
-keys.forEach(key => {
-    key.addEventListener('click', () => {
-        switch (key.id) {
+     init: function() {
+      keys.forEach(key => {
+          key.addEventListener('click', event => {
+              this.handleKeyClick(event.target.id);
+          });
+      });
+  },
+
+    handleKeyClick: function(keyId) {
+        switch (keyId) {
             case 'clear':
-                calculator.displayValue = '';
-                calculator.firstOperand = '';
-                calculator.secondOperand = '';
-                calculator.operator = '';
-                calculator.result = '';
-                display.value = '';
+                this.clear();
                 break;
             case 'backspace':
-                calculator.displayValue = calculator.displayValue.slice(0, -1);
-                display.value = calculator.displayValue;
+                this.backspace();
+                break;
+            case 'percent':
+                this.percent();
                 break;
             case 'divide':
-                calculator.operator = key.id;
-                calculator.firstOperand = calculator.displayValue;
-                calculator.displayValue = '';
-                display.value = '';
-                break;
             case 'multiply':
-                calculator.operator = key.id;
-                calculator.firstOperand = calculator.displayValue;
-                calculator.displayValue = '';
-                display.value = '';
-                break;
             case 'subtract':
-                calculator.operator = key.id;
-                calculator.firstOperand = calculator.displayValue;
-                calculator.displayValue = '';
-                display.value = '';
-                break;
             case 'add':
-                calculator.operator = key.id;
-                calculator.firstOperand = calculator.displayValue;
-                calculator.displayValue = '';
-                display.value = '';
+                this.setOperator(keyId);
                 break;
             case 'equals':
-                calculator.secondOperand = calculator.displayValue;
-                calculator.result = calculate(calculator.firstOperand, calculator.secondOperand, calculator.operator);
-                display.value = calculator.result;
-                calculator.displayValue = '';
-                calculator.firstOperand = '';
-                calculator.secondOperand = '';
-                calculator.operator = '';
+                this.calculate();
                 break;
             default:
-                calculator.displayValue += key.textContent;
-                display.value = calculator.displayValue;
+                this.appendNumber(keyId);
         }
-    });
-});
+        this.updateDisplay();
+    },
 
-function calculate(a, b, operator) {
-    a = parseFloat(a);
-    b = parseFloat(b);
-    switch (operator) {
-        case 'divide':
-            return a / b;
-        case 'multiply':
-            return a * b;
-        case 'subtract':
-            return a - b;
-        case 'add':
-            return a + b;
+    clear: function() {
+        this.displayValue = '';
+        this.firstOperand = '';
+        this.operator = '';
+        this.secondOperand = '';
+        this.result = '';
+    },
+
+    backspace: function() {
+        this.displayValue = this.displayValue.slice(0, -1);
+    },
+
+    percent: function() {
+        this.displayValue = (parseFloat(this.displayValue) / 100).toString();
+    },
+
+    setOperator: function(operator) {
+        this.firstOperand = this.displayValue;
+        this.operator = operator;
+        this.displayValue = '';
+    },
+
+    appendNumber: function(number) {
+        this.displayValue += number;
+    },
+
+    calculate: function() {
+        this.secondOperand = this.displayValue;
+        switch (this.operator) {
+            case 'divide':
+                this.result = parseFloat(this.firstOperand) / parseFloat(this.secondOperand);
+                break;
+            case 'multiply':
+                this.result = parseFloat(this.firstOperand) * parseFloat(this.secondOperand);
+                break;
+            case 'subtract':
+                this.result = parseFloat(this.firstOperand) - parseFloat(this.secondOperand);
+                break;
+            case 'add':
+                this.result = parseFloat(this.firstOperand) + parseFloat(this.secondOperand);
+                break;
+        }
+        this.displayValue = this.result.toString();
+    },
+
+    updateDisplay: function() {
+        display.value = this.displayValue;
     }
-}
+};
+
+calculator.init();
